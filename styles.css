@@ -1,0 +1,26 @@
+.voicerecording-repo{
+ position:absolute;
+ display:block;
+ text-align:center;
+ width:98%;
+}
+
+.voicerecording-input{
+ margin-left:10px;
+}
+
+.voicerecording-name{
+ position:absolute;
+ display:block;
+ text-align:center;
+ margin-top:40px;
+ width:98%;
+}
+
+.voicerecording-submit{
+ position:absolute;
+ display:block;
+ text-align:center;
+ margin-top:60px;
+ width:98%;
+}

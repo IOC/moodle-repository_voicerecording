@@ -29,8 +29,7 @@
 
 class repository_voicerecording extends repository {
     private $mimetypes = array();
-    private $extension = 'spx';
-
+    private $extension = '';
 
     /**
      * Initialize context and options
@@ -48,6 +47,31 @@ class repository_voicerecording extends repository {
         $PAGE->requires->string_for_js('norecorder', 'repository_voicerecording');
         $PAGE->requires->string_for_js('norecording', 'repository_voicerecording');
         $PAGE->requires->string_for_js('submitfail', 'repository_voicerecording');
+    }
+
+    public static function type_config_form($mform, $classname = 'repository') {
+        parent::type_config_form($mform);
+        $audio_format = array(
+                get_string('audio_speex', 'repository_voicerecording'),
+                get_string('audio_imaadpcm', 'repository_voicerecording')
+        );
+        $sampling_rate = array(
+                get_string('rate_poor', 'repository_voicerecording'),
+                get_string('rate_low', 'repository_voicerecording'),
+                get_string('rate_medium', 'repository_voicerecording'),
+                get_string('rate_normal', 'repository_voicerecording'),
+                get_string('rate_high', 'repository_voicerecording'),
+                get_string('rate_excellent', 'repository_voicerecording')
+        );
+
+        $mform->addElement('select', 'audio_format', get_string('audio_format', 'repository_voicerecording'), $audio_format);
+        $mform->setDefault('audio_format', 0);
+        $mform->addElement('select', 'sampling_rate', get_string('sampling_rate', 'repository_voicerecording'), $sampling_rate);
+        $mform->setDefault('sampling_rate', 2);
+    }
+
+    public static function get_type_option_names() {
+        return array_merge(parent::get_type_option_names(), array('audio_format', 'sampling_rate'));
     }
 
     /**
@@ -131,7 +155,7 @@ class repository_voicerecording extends repository {
         @chmod($_FILES[$elname]['tmp_name'], $permissions);
 
         if (empty($saveas_filename)) {
-            $record->filename = clean_param($_FILES[$elname]['name'], PARAM_FILE) . '.' . $this->extension;
+            $record->filename = clean_param($_FILES[$elname]['name'], PARAM_FILE);
         } else {
             $ext = '';
             $match = array();
@@ -212,23 +236,34 @@ class repository_voicerecording extends repository {
         $client_id    = optional_param('client_id', '', PARAM_RAW);
         $sesskey      = optional_param('sesskey', '',PARAM_RAW);
 
+
+        $sampling_rates = array(8000, 11025, 16000, 22050, 32000, 44100);
+        $audio_formats = array('Speex', 'ImaADPCM');
+
+        $audio_format = intval(get_config('voicerecording', 'audio_format'));
+        $sampling_rate = intval(get_config('voicerecording', 'sampling_rate'));
+
+        $this->extension = ($audio_format === 0?'spx':'wav');
+
         $ret = array();
         $applet = new stdClass();
         $applet->type = 'hidden';
         $applet->name = 's';
+        $applet->id = 'voice-input-hidden';
         $applet->label = '<span class="voicerecording-repo">'.
                          '<object type="application/x-java-applet" width="180" height="40" id="voicerecording">'.
                          '<param name="code" value="gong.NanoGong"/>'.
                          '<param name="archive" value="' . $CFG->wwwroot . '/repository/voicerecording/nanogong.jar"/>'.
                          '<param name="ShowRecordButton" value="true" />'.
                          '<param name="ShowSaveButton" value="true" />'.
-                         '<param name="SamplingRate" value="16000"/>'.
-                         '<param name="AudioFormat" value="Speex" />'.
+                         '<param name="SamplingRate" value="'.$sampling_rates[$sampling_rate].'"/>'.
+                         '<param name="AudioFormat" value="'.$audio_formats[$audio_format].'" />'.
                          '</object>'.
                          '</span>';
         $item = new stdClass();
-        $item->type = 'hidden';
+        $item->type = 'text';
         $item->name = 'itemid';
+        $item->id = 'filenanoname';
         $item->label = '<span class="voicerecording-name mform">'.
                        html_writer::label(get_string('saveas','repository'), 'itemid', true, array('class' => 'required')).
                        '<img class="req" title="' . get_string('requiredelement', 'form') . '" alt="' . get_string('requiredelement', 'form') . '" src="' . $OUTPUT->pix_url('req') . '" />'.
@@ -236,7 +271,6 @@ class repository_voicerecording extends repository {
                        '</span>';
         $item->value = '';
 
-        $filename = 'nanofileaudio.spx';
         $fileuploaderphp = new moodle_url('/repository/voicerecording/ngupload.php',
                         array('itemid'   => $itemid,
                                'action'  => 'upload',
@@ -247,8 +281,10 @@ class repository_voicerecording extends repository {
         $fileuploaderphp = htmlspecialchars_decode($fileuploaderphp);
 
         $action = new stdClass();
-        $action->type = 'hidden';
+        $action->type = 'button';
         $action->name = 'submit';
+        $action->value = get_string('submit');
+        $action->id = 'btn-voicerecording';
         $action->label = '<span class="voicerecording-submit">'.
                          '<input type="button" id="btn-voicerecording" value="' . get_string('submit') . '" onclick="uploadNanogongRecording(\'voicerecording\',\'' . $fileuploaderphp . '\',\'' . $client_id . '\')">'.
                          '</span>';

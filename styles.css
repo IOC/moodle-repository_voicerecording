@@ -1,26 +1,33 @@
 .voicerecording-repo{
- position:absolute;
+ position:fixed;
  display:block;
  text-align:center;
- width:98%;
+ margin: -100px 0 0 -7% ;
 }
 
 .voicerecording-input{
  margin-left:10px;
+ width:100px;
 }
 
 .voicerecording-name{
- position:absolute;
+ position:fixed;
  display:block;
  text-align:center;
- margin-top:40px;
- width:98%;
+ margin:-50px 0 0 -13%;
 }
 
 .voicerecording-submit{
- position:absolute;
+ position:fixed;
  display:block;
  text-align:center;
- margin-top:60px;
- width:98%;
+ margin:-20px 0 0 -3%;
+}
+
+.voicerecording-submit input{
+  padding:1px 6px;
+}
+
+.fp-login-submit, td.input{
+ display:none;
 }

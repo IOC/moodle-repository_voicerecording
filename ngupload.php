@@ -35,7 +35,6 @@ require_once(dirname(dirname(dirname(__FILE__))).'/lib/filelib.php');
 require_once(dirname(dirname(__FILE__)).'/lib.php');
 
 $err = new stdClass();
-$ext = ".spx";//Speex audio file
 
 /// Parameters
 $action    = optional_param('action', '', PARAM_ALPHA);
@@ -88,7 +87,9 @@ if (file_exists($CFG->dirroot.'/repository/'.$type.'/lib.php')) {
 }
 
 if ($action === 'upload'){
-    $saveas_filename = trim($saveas_filename) . $ext;
+    $audio_format = intval(get_config('voicerecording', 'audio_format'));
+    $extension = ($audio_format === 0?'spx':'wav');
+    $saveas_filename = trim($saveas_filename). '.' .$extension;
     $result = $repo->upload($saveas_filename, $maxbytes);
     echo json_encode($result);
 }

@@ -27,6 +27,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2012050900;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2012052500;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011112900;        // Requires this Moodle version
 $plugin->component = 'repository_voicerecording'; // Full name of the plugin (used for diagnostics)

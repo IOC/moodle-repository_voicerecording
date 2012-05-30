@@ -227,7 +227,7 @@ class repository_voicerecording extends repository {
      * Return voicerecording form
      * @return array
      */
-    public function get_listing() {
+    public function get_listing($path = '', $page = '') {
         global $CFG, $USER, $OUTPUT;
 
         $itemid       = optional_param('itemid', 0, PARAM_INT);

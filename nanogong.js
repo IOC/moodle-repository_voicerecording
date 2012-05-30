@@ -56,18 +56,18 @@ function uploadNanogongRecording(recorderid, uploadpage, clientid) {
 	    	    doc: frame.contentWindow.document
 	    	}).use('node', function(Frame) {
 	    	    //Get elements
-	    		var url = (data.url)?data.url:data.newfile.url;
-	    		var file = Frame.one('#filename');
-	    	    var source = Frame.one('#src');
-	    	    var prev = Frame.one('#prev');
-	    	    //Set url
-	    	    source.set('value', url);
-  	    	    //Set filename
-	    	    file.set('value', url);
-	    	    //Set preview
-	    	    prev.set('innerHTML', embed_nanogong(url));
-		    	//Close filepicker
-	    	    M.core_filepicker.instances[clientid].hide();
+		    var url = (data.url?data.url:data.newfile.url);
+		    var file = Frame.one('#filename');
+		    var source = Frame.one('#src');
+		    var prev = Frame.one('#prev');
+		    //Set url
+		    source.set('value', url);
+		    //Set filename
+		    file.set('value', url);
+		    //Set preview
+		    prev.set('innerHTML', embed_nanogong(url));
+		    //Close filepicker
+		    M.core_filepicker.instances[clientid].hide();
 	    	});
 	    }
 	});

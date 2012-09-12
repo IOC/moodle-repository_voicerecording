@@ -211,7 +211,7 @@ class repository_voicerecording extends repository {
             $event['existingfile'] = new stdClass;
             $event['existingfile']->filepath = $record->filepath;
             $event['existingfile']->filename = $existingfilename;
-            $event['existingfile']->url      = moodle_url::make_draftfile_url($record->itemid, $record->filepath, $existingfilename)->out();;
+            $event['existingfile']->url      = moodle_url::make_draftfile_url($record->itemid, $record->filepath, $existingfilename)->out();
             return $event;
         } else {
             $stored_file = $fs->create_file_from_pathname($record, $_FILES[$elname]['tmp_name']);

@@ -296,6 +296,14 @@ class repository_voicerecording extends repository {
     }
 
     /**
+     *
+     * @return array
+     */
+    public function supported_filetypes() {
+        return array('audio/ogg', 'audio/wav');
+    }
+
+    /**
      * supported return types
      * @return int
      */

@@ -20,7 +20,7 @@
 /**
  * A repository plugin to allow user create and upload audio files
  *
- * @since 2.0
+ * @since      2.3
  * @package    repository
  * @subpackage voice recording
  * @copyright  2012 Institut Obert de Catalunya
@@ -41,7 +41,7 @@ $action    = optional_param('action', '', PARAM_ALPHA);
 $repo_id   = optional_param('repo_id', 0, PARAM_INT);           // Repository ID
 $contextid = optional_param('ctx_id', SYSCONTEXTID, PARAM_INT); // Context ID
 $maxbytes  = optional_param('maxbytes', 0, PARAM_INT);          // Maxbytes
-$saveas_filename = optional_param('title', '', PARAM_ALPHANUMEXT); // Nanogong only accept alphanumeric characters
+$saveas_filename = optional_param('title', '', PARAM_ALPHANUMEXT); // Nanogong only accepts alphanumeric characters
 
 list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm);
@@ -55,18 +55,9 @@ if (!confirm_sesskey()) {
     die(json_encode($err));
 }
 
-/// Get repository instance information
-$sql = 'SELECT i.name, i.typeid, r.type FROM {repository} r, {repository_instances} i WHERE i.id=? AND i.typeid=r.id';
-
-if (!$repository = $DB->get_record_sql($sql, array($repo_id))) {
-    $err->error = get_string('invalidrepositoryid', 'repository');
-    die(json_encode($err));
-} else {
-    $type = $repository->type;
-}
-
-/// Check permissions
-repository::check_capability($contextid, $repository);
+// Check permissions
+$repo = repository::get_repository_by_id($repo_id, $contextid);
+$repo->check_capability();
 
 $moodle_maxbytes = get_max_upload_file_size();
 // to prevent maxbytes greater than moodle maxbytes setting
@@ -77,12 +68,12 @@ if ($maxbytes == 0 || $maxbytes>=$moodle_maxbytes) {
 /// Wait as long as it takes for this script to finish
 set_time_limit(0);
 
-if (file_exists($CFG->dirroot.'/repository/'.$type.'/lib.php')) {
-    require_once($CFG->dirroot.'/repository/'.$type.'/lib.php');
-    $classname = 'repository_' . $type;
-    $repo = new $classname($repo_id, $contextid, array('ajax'=>true, 'name'=>$repository->name, 'type'=>$type));
+if (file_exists($CFG->dirroot.'/repository/'.$repo->type.'/lib.php')) {
+    require_once($CFG->dirroot.'/repository/'.$repo->type.'/lib.php');
+    $classname = 'repository_' . $repo->type;
+    $repository = new $classname($repo_id, $contextid, array('ajax'=>true, 'name'=>$repo->get_name(), 'type'=>$repo->type));
 } else {
-    $err->error = get_string('invalidplugin', 'repository', $type);
+    $err->error = get_string('invalidplugin', 'repository', $repo->type);
     die(json_encode($err));
 }
 
@@ -90,6 +81,7 @@ if ($action === 'upload'){
     $audio_format = intval(get_config('voicerecording', 'audio_format'));
     $extension = ($audio_format === 0?'spx':'wav');
     $saveas_filename = trim($saveas_filename). '.' .$extension;
-    $result = $repo->upload($saveas_filename, $maxbytes);
+    $result = $repository->upload($saveas_filename, $maxbytes);
     echo json_encode($result);
 }
+

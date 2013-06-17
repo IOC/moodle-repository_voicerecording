@@ -68,12 +68,12 @@ if ($maxbytes == 0 || $maxbytes>=$moodle_maxbytes) {
 /// Wait as long as it takes for this script to finish
 set_time_limit(0);
 
-if (file_exists($CFG->dirroot.'/repository/'.$repo->type.'/lib.php')) {
-    require_once($CFG->dirroot.'/repository/'.$repo->type.'/lib.php');
-    $classname = 'repository_' . $repo->type;
-    $repository = new $classname($repo_id, $contextid, array('ajax'=>true, 'name'=>$repo->get_name(), 'type'=>$repo->type));
+if (file_exists($CFG->dirroot . '/repository/' . $repo->get_typename() . '/lib.php')) {
+    require_once($CFG->dirroot . '/repository/'. $repo->get_typename() . '/lib.php');
+    $classname = 'repository_' . $repo->get_typename();
+    $repository = new $classname($repo_id, $contextid, array('ajax'=>true, 'name'=>$repo->get_name(), 'type'=>$repo->get_typename()));
 } else {
-    $err->error = get_string('invalidplugin', 'repository', $repo->type);
+    $err->error = get_string('invalidplugin', 'repository', $repo->get_typename());
     die(json_encode($err));
 }
 
@@ -84,4 +84,3 @@ if ($action === 'upload'){
     $result = $repository->upload($saveas_filename, $maxbytes);
     echo json_encode($result);
 }
-

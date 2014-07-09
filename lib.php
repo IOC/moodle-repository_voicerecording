@@ -106,7 +106,7 @@ class repository_voicerecording extends repository {
         $record->license  = optional_param('license', $CFG->sitedefaultlicense, PARAM_TEXT);
         $record->author   = optional_param('author', '', PARAM_TEXT);
 
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         $elname = 'repo_voicerecording_file';
 
         $fs = get_file_storage();

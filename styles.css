@@ -1,33 +1,30 @@
-.voicerecording-repo{
- position:fixed;
- display:block;
- text-align:center;
- margin: -100px 0 0 -7% ;
+.voicerecording-repo {
+    display:block;
+    text-align:center;
+    margin: -100px 0 0 -7% ;
 }
 
-.voicerecording-input{
- margin-left:10px;
- width:100px;
+.voicerecording-input {
+    margin-left:10px;
+    width:100px;
 }
 
-.voicerecording-name{
- position:fixed;
- display:block;
- text-align:center;
- margin:-50px 0 0 -13%;
+.voicerecording-name {
+    display:block;
+    text-align:center;
+    margin:-50px 0 0 -13%;
 }
 
-.voicerecording-submit{
- position:fixed;
- display:block;
- text-align:center;
- margin:-20px 0 0 -3%;
+.voicerecording-submit {
+    display:block;
+    text-align:center;
+    margin:-20px 0 0 -3%;
 }
 
-.voicerecording-submit input{
-  padding:1px 6px;
+.voicerecording-submit input {
+    padding:1px 6px;
 }
 
-.fp-login-submit, td.input{
- display:none;
+.fp-login-submit, td.input {
+    display:none;
 }

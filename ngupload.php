@@ -34,6 +34,8 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(dirname(dirname(__FILE__))).'/lib/filelib.php');
 require_once(dirname(dirname(__FILE__)).'/lib.php');
 
+unset($SESSION->reponanogong);
+
 $err = new stdClass();
 
 /// Parameters
@@ -42,6 +44,7 @@ $repo_id   = optional_param('repo_id', 0, PARAM_INT);           // Repository ID
 $contextid = optional_param('ctx_id', SYSCONTEXTID, PARAM_INT); // Context ID
 $maxbytes  = optional_param('maxbytes', 0, PARAM_INT);          // Maxbytes
 $saveas_filename = optional_param('title', '', PARAM_ALPHANUMEXT); // Nanogong only accepts alphanumeric characters
+$itemid = optional_param('itemid', 0, PARAM_INT);
 
 list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm);
@@ -64,7 +67,6 @@ $moodle_maxbytes = get_max_upload_file_size();
 if ($maxbytes == 0 || $maxbytes>=$moodle_maxbytes) {
     $maxbytes = $moodle_maxbytes;
 }
-
 /// Wait as long as it takes for this script to finish
 set_time_limit(0);
 
@@ -81,6 +83,6 @@ if ($action === 'upload'){
     $audio_format = intval(get_config('voicerecording', 'audio_format'));
     $extension = ($audio_format === 0?'spx':'wav');
     $saveas_filename = trim($saveas_filename). '.' .$extension;
-    $result = $repository->upload($saveas_filename, $maxbytes);
+    $result = $repository->upload($saveas_filename, $maxbytes, $itemid);
     echo json_encode($result);
 }

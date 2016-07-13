@@ -25,6 +25,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once($CFG->dirroot . '/repository/lib.php');
+
 class repository_voicerecording extends repository {
     private $mimetypes = array();
     private $extension = '';
@@ -156,7 +158,7 @@ class repository_voicerecording extends repository {
         // this is tricky because clamdscan daemon might not be able to access the files
         $permissions = fileperms($_FILES[$elname]['tmp_name']);
         @chmod($_FILES[$elname]['tmp_name'], $CFG->filepermissions);
-        self::antivir_scan_file($_FILES[$elname]['tmp_name'], $_FILES[$elname]['name'], true);
+        \core\antivirus\manager::scan_file($_FILES[$elname]['tmp_name'], $_FILES[$elname]['name'], true);
         $sourcefield = $this->get_file_source_info($_FILES[$elname]['name']);
         $record->source = self::build_source_field($sourcefield);
         @chmod($_FILES[$elname]['tmp_name'], $permissions);

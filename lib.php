@@ -283,7 +283,7 @@ class repository_voicerecording extends repository {
         $html .= html_writer::end_tag('div');
         $html .= html_writer::start_tag('div', array('class' => 'fp-saveas control-group'));
         $content = get_string('saveas', 'repository');
-        $content .= html_writer::empty_tag('img', array('src' => $OUTPUT->pix_url('req'), 'alt' => get_string('required'), 'class' => 'req'));
+        $content .= html_writer::empty_tag('img', array('src' => $OUTPUT->image_url('req'), 'alt' => get_string('required'), 'class' => 'req'));
         $html .= html_writer::label($content, 'itemid', true, array('class' => 'required control-label'));
         $html .= html_writer::start_tag('div', array('class' => 'controls'));
         $params = array(
